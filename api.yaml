@@ -10,7 +10,89 @@ paths:
   
 components:
   securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: secret
+
   schemas:
+    Wish:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the wish
+        description:
+          type: string
+          description: further description of the wish
+      example:
+        $ref: '#/components/examples/spaceWish'
+    Wishes:
+      type: array
+      items:
+        $ref: '#/components/schemas/Wish'
+        examples:
+          - $ref: '#/components/examples/spaceWish'
+          - $ref: '#/components/examples/unicornWish'
+        
   parameters:
+    wishNameQuery:
+      in: query
+      name: wishName
+      schema:
+        type: string
+      description: Name of a wish
+      required: true
+    wishNameParam:
+      in: path
+      name: wishName
+      schema:
+        type: string
+      description: Name of a wish
+      required: true
+    
   responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example: { message: Bad or malformed request from client. }
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example: { message: Not Found }
+    ServerError:
+      description: SERVER ERROR
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              error:
+                type: string
+          example: { message: "Oops! It's not you, it's us.", error: A server error occured. }
+
   examples:
+    unicornWish:
+      value:
+        name: unicorn
+        description: A ridiculous unicorn desc
+    spaceWish:
+      value:
+        name: Space Tour
+        description: I wish to travel space.
+    
+         
