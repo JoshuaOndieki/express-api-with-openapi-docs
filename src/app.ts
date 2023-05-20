@@ -68,6 +68,10 @@ app.patch('/', (req:Request, res) => {
   try {
     const {wishName} = req.query
     const {name, description} = req.body
+    if (!name && !description) { // patch requires at least one field to be provided
+      const message = ('missing fields in body:') + (!name? ' name': '') + (!description? ' description':'')
+      return res.status(400).json({message})
+    }
     if (findWish(wishName as string, wishList)) {
       wishList.forEach((wish:Iwish)=>{
         if (wish.name == wishName) {
