@@ -1,13 +1,22 @@
 import express, {Request, Response, json} from 'express'
 import { Iwish } from './types'
 import { findWish, generateServerError } from './helper'
+import path from 'path'
+import swaggerUI from 'swagger-ui-express'
+import YAML from 'yamljs'
 
+// load api.yaml file, which is in the root directory of our project, as a JavaScript object
+const swaggerJsDocs = YAML.load(path.resolve(__dirname, '../api.yaml'))
 
 const app = express()
 
-let wishList:Iwish[] = [] // app starts with empty wishlist. NOTE: if server crashes or is restarted, the list always resets to empty
-
 app.use(json())
+
+// setup docs from our specification file and serve on the /docs route
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs))
+
+
+let wishList:Iwish[] = [] // app starts with empty wishlist. NOTE: if server crashes or is restarted, the list always resets to empty
 
 // get all wishes
 app.get('/', (req:Request, res) => {
