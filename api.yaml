@@ -7,7 +7,141 @@ servers:
   - url: /
 
 paths:
-  
+  /:
+    get:
+      tags:
+        - wish
+      summary: Get all Wishes
+      description: Returns an array of all wishes that have been saved.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wishes'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - wish
+      summary: Save a wish
+      description: Saves a new wish to the list of wishes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Wish'
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              example: {message: Wish Added Successfully.}
+        400:
+          $ref: '#/components/responses/BadRequest'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              example: {message: 'A wish named ${name} already exists.'}
+        500:
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags:
+        - wish
+      summary: update a wish
+      description: updates the name and description of wish
+      parameters:
+        - $ref: '#/components/parameters/wishNameQuery'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Wish'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wishes'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+    patch:
+      tags:
+        - wish
+      summary: patch a wish
+      description: updates the name and or description of wish
+      parameters:
+        - $ref: '#/components/parameters/wishNameQuery'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Wish'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              example: { message: 'Wish patched successfully.' }
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /{wishName}:
+    delete:
+      tags:
+        - wish
+      summary: Delete a wish
+      description: Deletes a wish from wishlist
+      parameters:
+        - $ref: '#/components/parameters/wishNameParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              example: { message: 'Wish deleted.' }
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /protected:
+    get:
+      tags:
+        - Top Secret
+      summary: Secret Information
+      description: Access to secret information if one has the key
+      security:
+        - apiKeyAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              example: {message: "Access Granted. Secret information ..."}
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: {message: "Access Denied."}
+        500:
+          $ref: '#/components/responses/ServerError'
+      
+
 components:
   securitySchemes:
     apiKeyAuth:
@@ -26,14 +160,17 @@ components:
           type: string
           description: further description of the wish
       example:
-        $ref: '#/components/examples/spaceWish'
+        - name: Space Tour
+          description: I wish to travel space.
     Wishes:
       type: array
       items:
         $ref: '#/components/schemas/Wish'
-        examples:
-          - $ref: '#/components/examples/spaceWish'
-          - $ref: '#/components/examples/unicornWish'
+      example:
+          - name: unicorn
+            description: A ridiculous unicorn desc
+          - name: Space Tour
+            description: I wish to travel space.
         
   parameters:
     wishNameQuery:
