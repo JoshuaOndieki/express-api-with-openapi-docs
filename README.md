@@ -20,3 +20,5 @@ EXPRESS REST API ROUTES
 | PATCH | / | In query `?wishName='Name of wish'` | Change a wish name and or description | Message indicating success/failure |
 | DELETE | /:wishName | In path `Replace :wishName with the name of wish` | Delete a wish | Message indicating success/failure |
 | GET | /protected | In header `secret` | Get Secret Info | If correct secret is provided, access granted, if not access denied |
+
+![image](https://github.com/JoshuaOndieki/express-api-with-openapi-docs/assets/24773276/919450b4-b6f9-484c-8efd-ceeb75c884e5)
