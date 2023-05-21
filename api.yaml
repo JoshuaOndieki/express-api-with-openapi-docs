@@ -159,9 +159,7 @@ components:
         description:
           type: string
           description: further description of the wish
-      example:
-        - name: Space Tour
-          description: I wish to travel space.
+      example: {name: Space Tour, description: I wish to travel space.}
     Wishes:
       type: array
       items:
